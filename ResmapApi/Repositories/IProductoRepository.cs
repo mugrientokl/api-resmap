@@ -9,5 +9,8 @@ namespace ResmapApi.Repositories
         Task<Producto> Crear(Producto producto);
         Task<bool> Actualizar(int id, Producto producto);
         Task<bool> Eliminar(int id);
+
+        Task<bool> ExisteCodigo(string codigo, int? idExcluir = null);
+        Task<bool> ExisteCategoria(int categoriaId);
     }
 }

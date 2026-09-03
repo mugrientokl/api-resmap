@@ -12,27 +12,41 @@ namespace ResmapApi.Repositories
             _db = db;
         }
 
+        // ==========================================
+        // OBTENER TODOS
+        // ==========================================
+
         public async Task<List<Producto>> ObtenerTodos()
         {
-            return await _db.Productos
-                .Include(p => p.Categoria)
-                .ToListAsync();
+            return await _db.Productos.ToListAsync();
         }
+
+        // ==========================================
+        // OBTENER POR ID
+        // ==========================================
 
         public async Task<Producto?> ObtenerPorId(int id)
         {
             return await _db.Productos
-                .Include(p => p.Categoria)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
+
+        // ==========================================
+        // CREAR
+        // ==========================================
 
         public async Task<Producto> Crear(Producto producto)
         {
             _db.Productos.Add(producto);
+
             await _db.SaveChangesAsync();
 
             return producto;
         }
+
+        // ==========================================
+        // ACTUALIZAR
+        // ==========================================
 
         public async Task<bool> Actualizar(int id, Producto producto)
         {
@@ -55,6 +69,10 @@ namespace ResmapApi.Repositories
             return true;
         }
 
+        // ==========================================
+        // ELIMINAR
+        // ==========================================
+
         public async Task<bool> Eliminar(int id)
         {
             var producto = await _db.Productos
@@ -64,9 +82,40 @@ namespace ResmapApi.Repositories
                 return false;
 
             _db.Productos.Remove(producto);
+
             await _db.SaveChangesAsync();
 
             return true;
+        }
+
+        // ==========================================
+        // COMPROBAR CÓDIGO
+        // ==========================================
+
+        public async Task<bool> ExisteCodigo(
+            string codigo,
+            int? idExcluir = null)
+        {
+            var consulta = _db.Productos
+                .Where(p => p.Codigo == codigo);
+
+            if (idExcluir.HasValue)
+            {
+                consulta = consulta
+                    .Where(p => p.Id != idExcluir.Value);
+            }
+
+            return await consulta.AnyAsync();
+        }
+
+        // ==========================================
+        // COMPROBAR CATEGORÍA
+        // ==========================================
+
+        public async Task<bool> ExisteCategoria(int categoriaId)
+        {
+            return await _db.Categorias
+                .AnyAsync(c => c.Id == categoriaId);
         }
     }
 }
