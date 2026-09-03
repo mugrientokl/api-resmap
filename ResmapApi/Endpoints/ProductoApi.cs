@@ -12,20 +12,12 @@ namespace ResmapApi.Endpoints
                 .MapGroup("/api/productos")
                 .WithTags("Productos");
 
-            // ==========================================
-            // GET - Obtener todos
-            // ==========================================
-
             grupo.MapGet("/", async (IProductoRepository repository) =>
             {
                 var productos = await repository.ObtenerTodos();
 
                 return Results.Ok(productos);
             });
-
-            // ==========================================
-            // GET - Obtener por ID
-            // ==========================================
 
             grupo.MapGet("/{id:int}", async (
                 int id,
@@ -44,9 +36,6 @@ namespace ResmapApi.Endpoints
                 return Results.Ok(producto);
             });
 
-            // ==========================================
-            // POST - Crear
-            // ==========================================
 
             grupo.MapPost("/", async (
                 Producto producto,
@@ -60,9 +49,6 @@ namespace ResmapApi.Endpoints
                 );
             });
 
-            // ==========================================
-            // PUT - Actualizar
-            // ==========================================
 
             grupo.MapPut("/{id:int}", async (
                 int id,
@@ -84,10 +70,6 @@ namespace ResmapApi.Endpoints
 
                 return Results.NoContent();
             });
-
-            // ==========================================
-            // DELETE - Eliminar
-            // ==========================================
 
             grupo.MapDelete("/{id:int}", async (
                 int id,
