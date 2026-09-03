@@ -1,0 +1,6 @@
+@ResmapApi_HostAddress = http://localhost:5091
+
+GET {{ResmapApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
