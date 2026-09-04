@@ -8,6 +8,7 @@ using ResmapApi.Repositories;
 using ResmapApi.Services;
 using Scalar.AspNetCore;
 using System.Text;
+using ResmapApi.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,7 +69,11 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<
+        BearerSecuritySchemeTransformer>();
+});
 
 var app = builder.Build();
 
