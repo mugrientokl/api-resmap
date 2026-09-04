@@ -87,7 +87,11 @@ app.UseAuthorization();
 
 app.MapGet("/", () =>
 {
-    return Results.Ok("ResmapApi funcionando correctamente");
+    return Results.Ok(new
+    {
+        mensaje = "ResmapApi funcionando correctamente",
+        version = "v1"
+    });
 });
 
 app.MapProductoApi();

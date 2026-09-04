@@ -9,7 +9,7 @@ namespace ResmapApi.Endpoints
         public static void MapProductoApi(this WebApplication app)
         {
             var grupo = app
-                .MapGroup("/api/productos")
+                .MapGroup("/api/v1/productos")
                 .WithTags("Productos")
                 .RequireAuthorization();
 
@@ -160,7 +160,7 @@ namespace ResmapApi.Endpoints
                 };
 
                 return Results.Created(
-                    $"/api/productos/{resultado.Id}",
+                    $"/api/v1/productos/{resultado.Id}",
                     resultado
                 );
             }).RequireAuthorization("Administrador");

@@ -11,7 +11,7 @@ namespace ResmapApi.Endpoints
             this WebApplication app)
         {
             var grupo = app
-                .MapGroup("/api/solicitudes")
+                .MapGroup("/api/v1/solicitudes")
                 .WithTags("Solicitudes de Pedido")
                 .RequireAuthorization();
 
@@ -101,7 +101,7 @@ namespace ResmapApi.Endpoints
                     await repository.Crear(solicitud);
 
                 return Results.Created(
-                    $"/api/solicitudes/{nuevaSolicitud.Id}",
+                    $"/api/v1/solicitudes/{nuevaSolicitud.Id}",
                     new
                     {
                         mensaje =

@@ -14,7 +14,7 @@ namespace ResmapApi.Endpoints
         public static void MapAuthApi(this WebApplication app)
         {
             var grupo = app
-                .MapGroup("/api/auth")
+                .MapGroup("/api/v1/auth")
                 .WithTags("Autenticación");
 
             // CREAR ADMINISTRADOR
@@ -150,7 +150,7 @@ namespace ResmapApi.Endpoints
                 await db.SaveChangesAsync();
 
                 return Results.Created(
-                    $"/api/auth/usuario/{usuario.Id}",
+                    $"/api/v1/auth/usuario/{usuario.Id}",
                     new
                     {
                         mensaje = "Usuario registrado correctamente",
