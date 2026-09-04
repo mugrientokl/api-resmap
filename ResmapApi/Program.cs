@@ -28,6 +28,15 @@ builder.Services.AddDbContext<ResmapdbContext>(options =>
 
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 
+builder.Services.AddScoped<
+    ISolicitudPedidoRepository,
+    SolicitudPedidoRepository>();
+
+builder.Services.AddScoped<
+    ISolicitudProveedorRepository,
+    SolicitudProveedorRepository>();
+
+
 builder.Services.AddScoped<AuthService>();
 
 builder.Services
@@ -80,4 +89,7 @@ app.MapGet("/", () =>
 
 app.MapProductoApi();
 app.MapAuthApi();
+app.MapSolicitudPedidoApi();
+app.MapSolicitudProveedorApi();
+
 app.Run();

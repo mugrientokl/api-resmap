@@ -17,7 +17,79 @@ namespace ResmapApi.Endpoints
                 .MapGroup("/api/auth")
                 .WithTags("Autenticación");
 
-            // REGISTRO
+            // CREAR ADMINISTRADOR
+            grupo.MapPost("/crear-admin", async (
+                RegistroDto registro,
+                ResmapdbContext db,
+                AuthService authService) =>
+            {
+                if (string.IsNullOrWhiteSpace(registro.Nombre))
+                {
+                    return Results.BadRequest(new
+                    {
+                        mensaje = "El nombre es obligatorio"
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(registro.Email))
+                {
+                    return Results.BadRequest(new
+                    {
+                        mensaje = "El email es obligatorio"
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(registro.Password))
+                {
+                    return Results.BadRequest(new
+                    {
+                        mensaje = "La contraseña es obligatoria"
+                    });
+                }
+
+                var emailExiste = await db.Usuarios
+                    .AnyAsync(u => u.Email == registro.Email);
+
+                if (emailExiste)
+                {
+                    return Results.Conflict(new
+                    {
+                        mensaje = "Ya existe un usuario con ese email"
+                    });
+                }
+
+                var usuario = new Usuario
+                {
+                    Nombre = registro.Nombre,
+                    Email = registro.Email,
+                    Rut = registro.Rut,
+
+                    // Rol 1 = Administrador
+                    RolId = 1
+                };
+
+                usuario.PasswordHash =
+                    authService.HashPassword(
+                        usuario,
+                        registro.Password);
+
+                db.Usuarios.Add(usuario);
+
+                await db.SaveChangesAsync();
+
+                return Results.Created(
+                    $"/api/auth/usuario/{usuario.Id}",
+                    new
+                    {
+                        mensaje = "Administrador creado correctamente",
+                        usuario.Id,
+                        usuario.Nombre,
+                        usuario.Email,
+                        Rol = "Administrador"
+                    });
+            });
+
+            // REGISTRO DE CLIENTE
             grupo.MapPost("/registro", async (
                 RegistroDto registro,
                 ResmapdbContext db,
@@ -64,8 +136,7 @@ namespace ResmapApi.Endpoints
                     Email = registro.Email,
                     Rut = registro.Rut,
 
-                    // Todo usuario que se registre por esta ruta
-                    // será Cliente.
+                    // Todo registro público crea un Cliente.
                     RolId = 2
                 };
 
@@ -111,7 +182,8 @@ namespace ResmapApi.Endpoints
                     usuario,
                     login.Password);
 
-                if (resultado != Microsoft.AspNetCore.Identity.PasswordVerificationResult.Success)
+                if (resultado !=
+                    Microsoft.AspNetCore.Identity.PasswordVerificationResult.Success)
                 {
                     return Results.Unauthorized();
                 }
