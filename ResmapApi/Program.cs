@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ResmapApi.Endpoints;
+using ResmapApi.Middleware;
 using ResmapApi.Models;
 using ResmapApi.Repositories;
 using ResmapApi.Services;
@@ -70,6 +71,8 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
